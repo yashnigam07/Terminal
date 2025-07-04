@@ -5,16 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NextGen Terminal 2025</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Fira Code:wght@400;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&display=swap');
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: 'Fira Code', monospace;
+      font-family: 'IBM Plex Mono', monospace;
     }
 
     body {
-      background: #0a0a0a;
+      background: linear-gradient(135deg, #1a1a1a, #2c2c2c);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -27,112 +27,163 @@
       top: 0;
       left: 0;
       z-index: -1;
-      opacity: 0.3;
+      opacity: 0.2;
     }
 
     .terminal {
       width: 90%;
-      max-width: 800px;
-      height: 500px;
-      background: rgba(20, 20, 20, 0.95);
-      border-radius: 12px;
-      box-shadow: 0 0 20px rgba(0, 255, 163, 0.2);
-      padding: 20px;
+      max-width: 850px;
+      height: 550px;
+      background: rgba(30, 30, 30, 0.7);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 24px;
       position: relative;
       z-index: 1;
-      transition: filter 0.3s;
+      transition: transform 0.3s ease;
+    }
+
+    .terminal:hover {
+      transform: translateY(-5px);
     }
 
     .terminal-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 10px;
-      background: #1a1a1a;
-      border-radius: 8px 8px 0 0;
+      padding: 12px 16px;
+      background: linear-gradient(90deg, #2a2a2a, #3a3a3a);
+      border-radius: 10px 10px 0 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     .terminal-buttons {
       display: flex;
-      gap: 8px;
+      gap: 10px;
     }
 
     .terminal-button {
-      width: 12px;
-      height: 12px;
+      width: 14px;
+      height: 14px;
       border-radius: 50%;
-      background: #ff5f57;
+      background: #ff6b6b;
+      border: 1px solid rgba(0, 0, 0, 0.3);
+      transition: transform 0.2s ease;
     }
 
-    .terminal-button:nth-child(2) { background: #ffbc38; }
-    .terminal-button:nth-child(3) { background: #00cc44; }
+    .terminal-button:hover {
+      transform: scale(1.2);
+    }
 
-    .voice-toggle {
-      cursor: pointer;
-      color: #00ff9f;
-      font-size: 12px;
+    .terminal-button:nth-child(2) { background: #f4c542; }
+    .terminal-button:nth-child(3) { background: #2ecc71; }
+
+    .clock-display {
+      color: #e0e0e0;
+      font-size: 13px;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 4px 8px;
+      border-radius: 4px;
     }
 
     .terminal-body {
-      margin-top: 40px;
-      height: calc(100% - 40px);
+      margin-top: 20px;
+      height: calc(100% - 50px);
       overflow-y: auto;
       padding: 20px;
-      color: #00ff9f;
-      font-size: 14px;
-      line-height: 1.5;
+      color: #e0e0e0;
+      font-size: 15px;
+      line-height: 1.6;
     }
 
     .terminal-input {
       display: flex;
       align-items: center;
-      margin-top: 10px;
-      position: relative;
+      margin-top: 12px;
+      position: sticky;
+      bottom: 0;
+      background: inherit;
     }
 
-    .prompt { color: #00cc44; margin-right: 5px; }
+    .prompt {
+      color: #2ecc71;
+      margin-right: 8px;
+      font-weight: 600;
+    }
 
     #terminalInput {
       background: transparent;
       border: none;
-      color: #00ff9f;
-      font-family: 'Fira Code', monospace;
-      font-size: 14px;
+      color: #e0e0e0;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 15px;
       width: 100%;
       outline: none;
     }
 
     .cursor {
-      width: 8px;
-      height: 16px;
-      background: #00ff9f;
+      width: 10px;
+      height: 18px;
+      background: #2ecc71;
       display: inline-block;
-      animation: blink 1s infinite;
+      animation: blink 1.2s infinite;
     }
 
-    .output { margin: 10px 0; opacity: 0; }
+    .output {
+      margin: 12px 0;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    .error {
+      color: #ff4d4d;
+      font-weight: 600;
+    }
 
     .suggestions {
       position: absolute;
       top: 100%;
       left: 20px;
-      background: rgba(20, 20, 20, 0.9);
-      color: #00ff9f;
-      border-radius: 4px;
-      padding: 5px;
-      max-height: 100px;
+      background: rgba(30, 30, 30, 0.8);
+      backdrop-filter: blur(8px);
+      color: #e0e0e0;
+      border-radius: 6px;
+      padding: 8px;
+      max-height: 120px;
       overflow-y: auto;
       width: calc(100% - 40px);
       z-index: 2;
       opacity: 0;
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     .suggestion-item {
-      padding: 5px;
+      padding: 6px 8px;
       cursor: pointer;
+      border-radius: 4px;
+      transition: background 0.2s ease;
     }
 
-    .suggestion-item:hover { background: rgba(0, 255, 163, 0.2); }
+    .suggestion-item:hover, .suggestion-item:focus {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .hint-tooltip {
+      position: absolute;
+      top: calc(100% + 140px);
+      left: 20px;
+      background: rgba(30, 30, 30, 0.8);
+      color: #d4af37;
+      font-size: 13px;
+      padding: 6px 10px;
+      border-radius: 4px;
+      max-width: calc(100% - 40px);
+      z-index: 2;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
 
     @keyframes blink {
       0%, 50% { opacity: 1; }
@@ -141,264 +192,436 @@
 
     .terminal-body::-webkit-scrollbar {
       width: 8px;
+      background: rgba(0, 0, 0, 0.2);
     }
 
-    .terminal-body::-webkit-scrollbar-track { background: #1a1a1a; }
     .terminal-body::-webkit-scrollbar-thumb {
-      background: #00cc44;
+      background: #2ecc71;
+      border: none;
       border-radius: 4px;
     }
 
-    .suggestions::-webkit-scrollbar { width: 6px; }
-    .suggestions::-webkit-scrollbar-track { background: #1a1a1a; }
-    .suggestions::-webkit-scrollbar-thumb { background: #00cc44; border-radius: 3px; }
+    .suggestions::-webkit-scrollbar {
+      width: 6px;
+      background: rgba(0, 0, 0, 0.2);
+    }
+
+    .suggestions::-webkit-scrollbar-thumb {
+      background: #2ecc71;
+      border: none;
+      border-radius: 3px;
+    }
 
     .light-theme {
-      background: rgba(240, 240, 240, 0.95);
-      color: #0a0a0a;
+      background: rgba(240, 240, 240, 0.9);
+      color: #1a1a1a;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
     }
 
-    .light-theme .terminal-header { background: #e0e0e0; }
-    .light-theme .prompt { color: #007bff; }
-    .light-theme #terminalInput { color: #0a0a0a; }
-    .light-theme .cursor { background: #007bff; }
-    .light-theme .suggestions { background: rgba(240, 240, 240, 0.9); color: #0a0a0a; }
-    .light-theme .suggestion-item:hover { background: rgba(0, 123, 255, 0.2); }
-    .light-theme::-webkit-scrollbar-thumb { background: #007bff; }
-
-    .crt-effect {
-      filter: url(#crtScanlines);
+    .light-theme .terminal-header {
+      background: linear-gradient(90deg, #e0e0e0, #f0f0f0);
     }
 
-    .neon-blue {
-      color: #00b7eb;
-      box-shadow: 0 0 20px rgba(0, 183, 235, 0.5);
+    .light-theme .prompt {
+      color: #007bff;
     }
 
-    .neon-blue .prompt { color: #007bff; }
-    .neon-blue #terminalInput { color: #00b7eb; }
-    .neon-blue .cursor { background: #00b7eb; }
-    .neon-blue .terminal-header { background: #1a3c4f; }
-    .neon-blue .suggestions { background: rgba(20, 60, 79, 0.9); }
-    .neon-blue .suggestion-item:hover { background: rgba(0, 183, 235, 0.3); }
-
-    .neon-pink {
-      color: #ff007f;
-      box-shadow: 0 0 20px rgba(255, 0, 127, 0.5);
+    .light-theme #terminalInput {
+      color: #1a1a1a;
     }
 
-    .neon-pink .prompt { color: #c6005e; }
-    .neon-pink #terminalInput { color: #ff007f; }
-    .neon-pink .cursor { background: #ff007f; }
-    .neon-pink .terminal-header { background: #4f1a3c; }
-    .neon-pink .suggestions { background: rgba(79, 20, 60, 0.9); }
-    .neon-pink .suggestion-item:hover { background: rgba(255, 0, 127, 0.3); }
-
-    .glitch {
-      animation: glitch 0.2s ease-in-out;
+    .light-theme .cursor {
+      background: #007bff;
     }
 
-    @keyframes glitch {
-      0% { transform: translate(0); }
-      20% { transform: translate(-2px, 2px); }
-      40% { transform: translate(2px, -2px); }
-      60% { transform: translate(-1px, 1px); }
-      80% { transform: translate(1px, -1px); }
-      100% { transform: translate(0); }
+    .light-theme .suggestions {
+      background: rgba(240, 240, 240, 0.9);
+      color: #1a1a1a;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .light-theme .suggestion-item:hover, .light-theme .suggestion-item:focus {
+      background: rgba(0, 123, 255, 0.1);
+    }
+
+    .light-theme .hint-tooltip {
+      background: rgba(240, 240, 240, 0.9);
+      color: #007bff;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .gold-theme {
+      color: #d4af37;
+      box-shadow: 0 8px 32px rgba(212, 175, 55, 0.3);
+      border: 1px solid rgba(212, 175, 55, 0.2);
+    }
+
+    .gold-theme .prompt {
+      color: #d4af37;
+    }
+
+    .gold-theme #terminalInput {
+      color: #d4af37;
+    }
+
+    .gold-theme .cursor {
+      background: #d4af37;
+    }
+
+    .gold-theme .terminal-header {
+      background: linear-gradient(90deg, #3a3a2a, #4a4a2a);
+    }
+
+    .gold-theme .suggestions {
+      background: rgba(30, 30, 30, 0.8);
+      border: 1px solid rgba(212, 175, 55, 0.2);
+    }
+
+    .gold-theme .suggestion-item:hover, .gold-theme .suggestion-item:focus {
+      background: rgba(212, 175, 55, 0.1);
+    }
+
+    .gold-theme .hint-tooltip {
+      background: rgba(30, 30, 30, 0.8);
+      color: #d4af37;
+      border: 1px solid rgba(212, 175, 55, 0.2);
+    }
+
+    .silver-theme {
+      color: #c0c0c0;
+      box-shadow: 0 8px 32px rgba(192, 192, 192, 0.3);
+      border: 1px solid rgba(192, 192, 192, 0.2);
+    }
+
+    .silver-theme .prompt {
+      color: #c0c0c0;
+    }
+
+    .silver-theme #terminalInput {
+      color: #c0c0c0;
+    }
+
+    .silver-theme .cursor {
+      background: #c0c0c0;
+    }
+
+    .silver-theme .terminal-header {
+      background: linear-gradient(90deg, #2a2a3a, #3a3a4a);
+    }
+
+    .silver-theme .suggestions {
+      background: rgba(30, 30, 30, 0.8);
+      border: 1px solid rgba(192, 192, 192, 0.2);
+    }
+
+    .silver-theme .suggestion-item:hover, .silver-theme .suggestion-item:focus {
+      background: rgba(192, 192, 192, 0.1);
+    }
+
+    .silver-theme .hint-tooltip {
+      background: rgba(30, 30, 30, 0.8);
+      color: #c0c0c0;
+      border: 1px solid rgba(192, 192, 192, 0.2);
     }
 
     @media (max-width: 600px) {
-      .terminal { width: 95%; height: 80vh; }
-      .terminal-body { font-size: 12px; }
-      .suggestions { font-size: 12px; }
+      .terminal {
+        width: 95%;
+        height: 80vh;
+      }
+      .terminal-body {
+        font-size: 14px;
+      }
+      .suggestions, .hint-tooltip {
+        font-size: 14px;
+      }
     }
   </style>
-  <svg style="display: none;">
-    <filter id="crtScanlines">
-      <feTurbulence type="fractalNoise" baseFrequency="0.01" numOctaves="1" result="noise" />
-      <feDisplacementMap in="SourceGraphic" in2="noise" scale="2" xChannelSelector="R" yChannelSelector="G" />
-      <feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.8 0" />
-    </filter>
-  </svg>
 </head>
 <body>
   <canvas id="bgCanvas"></canvas>
-  <div class="terminal">
+  <div class="terminal" role="region" aria-label="NextGen Terminal">
     <div class="terminal-header">
       <div class="terminal-buttons">
-        <div class="terminal-button"></div>
-        <div class="terminal-button"></div>
-        <div class="terminal-button"></div>
+        <div class="terminal-button" aria-label="Close"></div>
+        <div class="terminal-button" aria-label="Minimize"></div>
+        <div class="terminal-button" aria-label="Maximize"></div>
       </div>
-      <span class="voice-toggle" id="voiceToggle">🎙️ Voice: Off</span>
+      <span class="clock-display" id="clockDisplay"></span>
     </div>
-    <div class="terminal-body" id="terminalBody">
+    <div class="terminal-body" id="terminalBody" role="log" aria-live="polite">
       <div class="output">Welcome to NextGen Terminal 2025</div>
-      <div class="output">Type 'help' for commands or toggle voice mode.</div>
+      <div class="output">Type 'help' for commands.</div>
       <div class="terminal-input">
         <span class="prompt">$</span>
-        <input type="text" id="terminalInput" autocomplete="off">
+        <input type="text" id="terminalInput" autocomplete="off" aria-label="Command input">
         <span class="cursor"></span>
-        <div class="suggestions" id="suggestions"></div>
+        <div class="suggestions" id="suggestions" role="listbox"></div>
+        <div class="hint-tooltip" id="hintTooltip" role="tooltip"></div>
       </div>
     </div>
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
   <script>
-    // Three.js Background and Visualizations
+    // Three.js Background
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('bgCanvas'), alpha: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
 
+    const particleCount = 400;
     const geometry = new THREE.BufferGeometry();
     const vertices = [];
-    for (let i = 0; i < 1000; i++) {
+    for (let i = 0; i < particleCount; i++) {
       vertices.push(
-        Math.random() * 200 - 100,
-        Math.random() * 200 - 100,
-        Math.random() * 200 - 100
+        Math.random() * 120 - 60,
+        Math.random() * 120 - 60,
+        Math.random() * 120 - 60
       );
     }
     geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
-    const material = new THREE.PointsMaterial({ color: 0x00ff9f, size: 0.5 });
+    const material = new THREE.PointsMaterial({ color: 0xe0e0e0, size: 0.3 });
     const particles = new THREE.Points(geometry, material);
     scene.add(particles);
-    camera.position.z = 100;
+    camera.position.z = 70;
 
     let vizObjects = [];
-    let animationSpeed = 0.001;
+    const animationSpeed = 0.0004;
 
     function clearViz() {
       vizObjects.forEach(obj => scene.remove(obj));
       vizObjects = [];
     }
 
-    function renderWeatherViz(city, weatherData) {
+    function renderWeatherViz(city) {
       clearViz();
       const globe = new THREE.Mesh(
-        new THREE.SphereGeometry(10, 32, 32),
-        new THREE.MeshBasicMaterial({ color: 0x00ff9f, wireframe: true })
+        new THREE.SphereGeometry(8, 32, 32),
+        new THREE.MeshBasicMaterial({ color: 0xd4af37, wireframe: true })
       );
       scene.add(globe);
       vizObjects.push(globe);
       const cloudGeometry = new THREE.BufferGeometry();
       const cloudVertices = [];
-      for (let i = 0; i < 50; i++) {
+      for (let i = 0; i < 30; i++) {
         cloudVertices.push(
-          Math.random() * 20 - 10,
-          Math.random() * 20 - 10,
-          Math.random() * 20 - 10
+          Math.random() * 16 - 8,
+          Math.random() * 16 - 8,
+          Math.random() * 16 - 8
         );
       }
       cloudGeometry.setAttribute('position', new THREE.Float32BufferAttribute(cloudVertices, 3));
-      const cloudMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: 0.5 });
+      const cloudMaterial = new THREE.PointsMaterial({ color: 0xe0e0e0, size: 0.35 });
       const clouds = new THREE.Points(cloudGeometry, cloudMaterial);
       scene.add(clouds);
       vizObjects.push(clouds);
-      gsap.to(globe.rotation, { y: Math.PI * 2, duration: 10, repeat: -1, ease: 'linear' });
-      setTimeout(clearViz, 5000);
+      gsap.to(globe.rotation, { y: Math.PI * 2, duration: 12, repeat: -1, ease: 'linear' });
+      setTimeout(clearViz, 6000);
     }
 
     function renderStockViz(symbol, price) {
       clearViz();
-      const points = [];
-      for (let i = 0; i < 20; i++) {
-        points.push(new THREE.Vector3(i - 10, Math.sin(i * 0.5) * 5 + (price % 10), 0));
-      }
-      const lineGeometry = new THREE.BufferGeometry().setFromPoints(points);
-      const lineMaterial = new THREE.LineBasicMaterial({ color: 0x00ff9f });
-      const line = new THREE.Line(lineGeometry, lineMaterial);
-      scene.add(line);
-      vizObjects.push(line);
-      gsap.to(line.rotation, { y: Math.PI, duration: 8, repeat: -1, ease: 'power2.inOut' });
-      setTimeout(clearViz, 5000);
+      const canvas = document.createElement('canvas');
+      canvas.width = 300;
+      canvas.height = 150;
+      const ctx = canvas.getContext('2d');
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: Array(10).fill().map((_, i) => i),
+          datasets: [{
+            data: Array(10).fill().map(() => price + (Math.random() - 0.5) * 10),
+            borderColor: '#d4af37',
+            borderWidth: 2,
+            pointRadius: 0,
+            tension: 0.4
+          }]
+        },
+        options: { scales: { x: { display: false }, y: { display: false } }, plugins: { legend: { display: false } } }
+      });
+      const texture = new THREE.CanvasTexture(canvas);
+      const plane = new THREE.Mesh(
+        new THREE.PlaneGeometry(15, 7.5),
+        new THREE.MeshBasicMaterial({ map: texture, transparent: true })
+      );
+      plane.position.z = 10;
+      scene.add(plane);
+      vizObjects.push(plane);
+      gsap.to(plane.rotation, { y: Math.PI, duration: 10, repeat: -1, ease: 'power2.inOut' });
+      setTimeout(clearViz, 6000);
     }
 
     function renderDateViz() {
       clearViz();
       const clock = new THREE.Mesh(
-        new THREE.CircleGeometry(10, 32),
-        new THREE.MeshBasicMaterial({ color: 0x00ff9f, wireframe: true })
+        new THREE.CircleGeometry(8, 32),
+        new THREE.MeshBasicMaterial({ color: 0xd4af37, wireframe: true })
       );
       scene.add(clock);
       vizObjects.push(clock);
       const hourHand = new THREE.Mesh(
-        new THREE.BoxGeometry(1, 5, 0.1),
-        new THREE.MeshBasicMaterial({ color: 0xffffff })
+        new THREE.BoxGeometry(0.8, 4, 0.1),
+        new THREE.MeshBasicMaterial({ color: 0xe0e0e0 })
       );
-      hourHand.position.y = 2.5;
+      hourHand.position.y = 2;
       scene.add(hourHand);
       vizObjects.push(hourHand);
       const now = new Date();
       const hours = now.getHours() % 12;
       const minutes = now.getMinutes();
-      gsap.to(hourHand.rotation, { z: -(hours + minutes / 60) * Math.PI / 6, duration: 1, ease: 'power2.out' });
-      setTimeout(clearViz, 5000);
+      gsap.to(hourHand.rotation, { z: -(hours + minutes / 60) * Math.PI / 6, duration: 1.2, ease: 'power2.out' });
+      setTimeout(clearViz, 6000);
     }
 
-    function renderStarsAnimation(speed) {
+    function renderStarsAnimation() {
       clearViz();
       const starGeometry = new THREE.BufferGeometry();
       const starVertices = [];
-      for (let i = 0; i < 200; i++) {
+      for (let i = 0; i < 100; i++) {
         starVertices.push(
-          Math.random() * 50 - 25,
-          Math.random() * 50 - 25,
-          Math.random() * 50 - 25
+          Math.random() * 40 - 20,
+          Math.random() * 40 - 20,
+          Math.random() * 40 - 20
         );
       }
       starGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starVertices, 3));
-      const starMaterial = new THREE.PointsMaterial({ color: 0x00ff9f, size: 0.7 });
+      const starMaterial = new THREE.PointsMaterial({ color: 0xe0e0e0, size: 0.5 });
       const stars = new THREE.Points(starGeometry, starMaterial);
       scene.add(stars);
       vizObjects.push(stars);
-      animationSpeed = speed || 0.005;
+      setTimeout(clearViz, 6000);
     }
 
-    function animateParticles() {
-      particles.rotation.y += animationSpeed;
-      vizObjects.forEach(obj => {
-        if (obj.type === 'Points') obj.rotation.y += animationSpeed;
-      });
-      renderer.render(scene, camera);
-      requestAnimationFrame(animateParticles);
+    function renderTreeViz() {
+      clearViz();
+      const root = new THREE.Mesh(
+        new THREE.BoxGeometry(1, 1, 1),
+        new THREE.MeshBasicMaterial({ color: 0xd4af37, wireframe: true })
+      );
+      scene.add(root);
+      vizObjects.push(root);
+      let yOffset = 2;
+      function addNode(dir, parent, x, z, depth) {
+        Object.keys(dir.dirs).forEach((name, i) => {
+          const node = new THREE.Mesh(
+            new THREE.BoxGeometry(0.8, 0.8, 0.8),
+            new THREE.MeshBasicMaterial({ color: 0xe0e0e0, wireframe: true })
+          );
+          node.position.set(x + (i - Object.keys(dir.dirs).length / 2) * 2, yOffset - depth * 2, z + 2);
+          scene.add(node);
+          vizObjects.push(node);
+          const lineGeometry = new THREE.BufferGeometry().setFromPoints([
+            new THREE.Vector3(parent.position.x, parent.position.y, parent.position.z),
+            new THREE.Vector3(node.position.x, node.position.y, node.position.z)
+          ]);
+          const line = new THREE.Line(
+            lineGeometry,
+            new THREE.LineBasicMaterial({ color: 0x2ecc71 })
+          );
+          scene.add(line);
+          vizObjects.push(line);
+          addNode(dir.dirs[name], node, node.position.x, node.position.z, depth + 1);
+        });
+      }
+      addNode(filesystem, root, 0, 0, 1);
+      gsap.to(root.rotation, { y: Math.PI * 2, duration: 12, repeat: -1, ease: 'linear' });
+      setTimeout(clearViz, 6000);
     }
-    animateParticles();
+
+    let animationFrameId;
+    function animateParticlesLoop() {
+      if (!document.hidden) {
+        particles.rotation.y += animationSpeed;
+        vizObjects.forEach(obj => {
+          if (obj.type === 'Points') obj.rotation.y += animationSpeed;
+        });
+        renderer.render(scene, camera);
+      }
+      animationFrameId = requestAnimationFrame(animateParticlesLoop);
+    }
+    animateParticlesLoop();
+
+    window.addEventListener('resize', () => {
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      if (window.innerHeight < 500) {
+        document.querySelector('.terminal').style.height = '60vh';
+      } else {
+        document.querySelector('.terminal').style.height = '550px';
+      }
+    });
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        cancelAnimationFrame(animationFrameId);
+      } else {
+        animateParticlesLoop();
+      }
+    });
 
     // Terminal Logic
     const terminalBody = document.getElementById('terminalBody');
     let terminalInput = document.getElementById('terminalInput');
-    const voiceToggle = document.getElementById('voiceToggle');
     const suggestions = document.getElementById('suggestions');
+    const hintTooltip = document.getElementById('hintTooltip');
     let commandHistory = JSON.parse(localStorage.getItem('commandHistory') || '[]');
-    let historyIndex = commandHistory.length;
-    let recognition;
-    let aiSuggestionsEnabled = true;
-    let crtEffectEnabled = false;
-    let neonTheme = 'default';
-    let tutorialStep = 0;
-    const tutorialSteps = [
-      { command: 'help', description: 'Lists all available commands.' },
-      { command: 'weather Tokyo', description: 'Fetches weather data for a city.' },
-      { command: 'theme', description: 'Toggles between dark and light themes.' },
-      { command: 'animate stars', description: 'Triggers a starfield animation.' }
-    ];
+    let aliases = JSON.parse(localStorage.getItem('aliases') || '{}');
+    let filesystem = JSON.parse(localStorage.getItem('filesystem') || '{"home": {"files": {}, "dirs": {}, "parentPath": null}}');
+    let currentDir = filesystem.home;
+    let currentDirPath = ['home'];
+    let undoStack = [];
+    let currentTheme = 'default';
+    let currentTimeZone = 'Asia/Kolkata';
 
-    // AI-Powered Suggestions
-    const commandFrequencies = JSON.parse(localStorage.getItem('commandFrequencies') || '{}');
-    function updateCommandFrequency(command) {
-      commandFrequencies[command] = (commandFrequencies[command] || 0) + 1;
-      localStorage.setItem('commandFrequencies', JSON.stringify(commandFrequencies));
+    // Filesystem Parent Reconstruction
+    function rebuildFilesystemParents(fs) {
+      function traverse(dir, path = ['home']) {
+        dir.parentPath = path.slice(0, -1);
+        dir.parent = null;
+        if (dir.parentPath.length) {
+          let parent = fs;
+          for (let segment of dir.parentPath) {
+            parent = parent.dirs[segment];
+          }
+          dir.parent = parent;
+        }
+        Object.keys(dir.dirs).forEach(name => {
+          traverse(dir.dirs[name], [...path, name]);
+        });
+      }
+      traverse(fs.home);
+      return fs;
     }
 
-    function getAISuggestions(input) {
-      const commands = Object.keys(commandFrequencies);
-      const sortedCommands = commands.sort((a, b) => commandFrequencies[b] - commandFrequencies[a]);
-      return sortedCommands.filter(cmd => cmd.startsWith(input.toLowerCase())).slice(0, 3);
+    // Prepare Filesystem for Serialization
+    function prepareFilesystemForSerialization(fs) {
+      function traverse(dir) {
+        const newDir = { files: { ...dir.files }, dirs: {}, parentPath: dir.parentPath };
+        delete newDir.parent;
+        Object.keys(dir.dirs).forEach(name => {
+          newDir.dirs[name] = traverse(dir.dirs[name]);
+        });
+        return newDir;
+      }
+      return { home: traverse(fs.home) };
     }
+
+    // Initialize Filesystem
+    filesystem = rebuildFilesystemParents(filesystem);
+    currentDir = filesystem.home;
+
+    // Clock Widget
+    const clockDisplay = document.getElementById('clockDisplay');
+    function updateClock() {
+      const now = new Date().toLocaleString('en-US', { timeZone: currentTimeZone, hour: '2-digit', minute: '2-digit' });
+      clockDisplay.textContent = `${currentDirPath.join('/')}> ${now} (${currentTimeZone})`;
+    }
+    updateClock();
+    setInterval(updateClock, 60000);
 
     // Trie for Autocomplete
     const trie = {
@@ -429,188 +652,133 @@
       }
     };
 
-    // API Configuration
-    const config = {
-      openWeatherMapApiKey: '204029892e172ef4690b2cefc641528f',
-      alphaVantageApiKey: 'VINMFIYFJ1P087M1'
+    // Command Descriptions for Hints
+    const commandDescriptions = {
+      help: 'Lists all available commands',
+      whoami: 'Displays user info',
+      about: 'About this terminal',
+      clear: 'Clears the terminal',
+      date: 'Shows current date with visualization',
+      theme: 'Changes theme (default/light/gold/silver)',
+      art: 'Displays ASCII art (e.g., art rocket)',
+      weather: 'Fetches weather data (e.g., weather Tokyo)',
+      stock: 'Fetches stock price (e.g., stock AAPL)',
+      liststocks: 'Lists popular stock symbols',
+      animate: 'Starts starfield animation (e.g., animate stars)',
+      history: 'Shows command history (optional: history <search>)',
+      alias: 'Sets a command alias (e.g., alias w=weather)',
+      unalias: 'Removes an alias (e.g., unalias w)',
+      clock: 'Sets clock timezone (e.g., clock America/New_York)',
+      undo: 'Reverts the last command’s output or action',
+      export: 'Exports settings to a JSON file',
+      import: 'Imports settings from a JSON file',
+      mkdir: 'Creates a folder (e.g., mkdir docs)',
+      ls: 'Lists files and folders in current directory',
+      cd: 'Changes directory (e.g., cd docs, cd ..)',
+      rmdir: 'Removes an empty folder (e.g., rmdir docs)',
+      tree: 'Visualizes filesystem as a 3D tree'
     };
-
-    // Sound Effects
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    function playSound(frequency, type = 'sine', duration = 0.1) {
-      const oscillator = audioCtx.createOscillator();
-      const gainNode = audioCtx.createGain();
-      oscillator.connect(gainNode);
-      gainNode.connect(audioCtx.destination);
-      oscillator.type = type;
-      oscillator.frequency.setValueAtTime(frequency, audioCtx.currentTime);
-      gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
-      oscillator.start();
-      gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
-      oscillator.stop(audioCtx.currentTime + duration);
-    }
-
-    // Voice Recognition
-    if ('webkitSpeechRecognition' in window) {
-      recognition = new webkitSpeechRecognition();
-      recognition.continuous = false;
-      recognition.interimResults = false;
-      recognition.onresult = (event) => {
-        const command = event.results[0][0].transcript.trim().toLowerCase();
-        if (command.includes('stars faster')) {
-          animationSpeed = Math.min(animationSpeed + 0.005, 0.02);
-          renderStarsAnimation(animationSpeed);
-          handleCommand('animate stars');
-        } else if (command.includes('stars slower')) {
-          animationSpeed = Math.max(animationSpeed - 0.005, 0.001);
-          renderStarsAnimation(animationSpeed);
-          handleCommand('animate stars');
-        } else if (command.includes('stars brighter')) {
-          material.size = Math.min(material.size + 0.1, 1.0);
-          handleCommand('animate stars');
-        } else {
-          handleCommand(command);
-        }
-        voiceToggle.textContent = '🎙️ Voice: Off';
-        recognition.stop();
-      };
-      voiceToggle.addEventListener('click', () => {
-        if (voiceToggle.textContent.includes('Off')) {
-          voiceToggle.textContent = '🎙️ Voice: On';
-          recognition.start();
-        } else {
-          voiceToggle.textContent = '🎙️ Voice: Off';
-          recognition.stop();
-        }
-      });
-    } else {
-      voiceToggle.style.display = 'none';
-    }
-
-    // Plugin System
-    let plugins = JSON.parse(localStorage.getItem('plugins') || '{}');
-    function loadPlugin(name, url) {
-      return new Promise((resolve, reject) => {
-        const script = document.createElement('script');
-        script.src = url;
-        script.onload = () => {
-          if (window.pluginCommands && window.pluginCommands[name]) {
-            commands[name] = window.pluginCommands[name];
-            trie.insert(name);
-            plugins[name] = url;
-            localStorage.setItem('plugins', JSON.stringify(plugins));
-            resolve(`Plugin ${name} loaded successfully.`);
-          } else {
-            reject(`Plugin ${name} failed to load: Invalid plugin format.`);
-          }
-        };
-        script.onerror = () => reject(`Plugin ${name} failed to load: Invalid URL.`);
-        document.body.appendChild(script);
-      });
-    }
-
-    // Tutorial
-    function startTutorial() {
-      terminalBody.innerHTML = `<div class="output">Tutorial: Type the highlighted command or press Enter to proceed.</div>`;
-      showTutorialStep();
-    }
-
-    function showTutorialStep() {
-      if (tutorialStep >= tutorialSteps.length) {
-        terminalBody.innerHTML = `<div class="output">Tutorial completed!</div>
-          <div class="terminal-input">
-            <span class="prompt">$</span>
-            <input type="text" id="terminalInput" autocomplete="off">
-            <span class="cursor"></span>
-            <div class="suggestions" id="suggestions"></div>
-          </div>`;
-        terminalInput = document.getElementById('terminalInput');
-        setInputListener();
-        terminalInput.focus();
-        tutorialStep = 0;
-        return;
-      }
-      const step = tutorialSteps[tutorialStep];
-      const outputDiv = document.createElement('div');
-      outputDiv.className = 'output';
-      outputDiv.innerHTML = `<span style="color: #ff007f">${step.command}</span> - ${step.description}`;
-      terminalBody.appendChild(outputDiv);
-      gsap.fromTo(outputDiv, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' });
-      terminalBody.scrollTop = terminalBody.scrollHeight;
-      terminalInput = document.createElement('input');
-      terminalInput.type = 'text';
-      terminalInput.id = 'terminalInput';
-      terminalInput.autocomplete = 'off';
-      const inputContainer = document.createElement('div');
-      inputContainer.className = 'terminal-input';
-      inputContainer.innerHTML = `<span class="prompt">$</span>`;
-      inputContainer.appendChild(terminalInput);
-      inputContainer.innerHTML += `<span class="cursor"></span><div class="suggestions" id="suggestions"></div>`;
-      terminalBody.appendChild(inputContainer);
-      setInputListener();
-      terminalInput.focus();
-      gsap.fromTo(terminalInput, { opacity: 0 }, { opacity: 1, duration: 0.5 });
-    }
 
     // Commands
     const commands = {
       help: () => `Available commands:
+  alias <name>=<command> - Set a command alias
+  unalias <name> - Remove an alias
   whoami - Display user info
   about - About this terminal
   clear - Clear the terminal
   date - Show current date
-  theme - Toggle dark/light theme
+  theme default/light/gold/silver - Change theme
   art rocket - Display rocket ASCII art
   weather <city> - Fetch weather data
   stock <symbol> - Fetch stock price (e.g., stock AAPL)
   liststocks - List popular stock symbols
-  ai on/off - Toggle AI-powered suggestions
-  effect crt on/off - Toggle CRT effect
-  neon default/blue/pink - Set neon color scheme
   animate stars - Start starfield animation
-  plugin add <name> <url> - Add a plugin
-  plugin list - List installed plugins
-  plugin remove <name> - Remove a plugin
-  tutorial - Start interactive tutorial`,
+  history [search] - Show command history
+  clock <timezone> - Set clock timezone
+  undo - Revert last command
+  export - Export settings
+  import - Import settings
+  mkdir <folder> - Create a folder
+  ls - List files and folders
+  cd <folder> - Change directory
+  rmdir <folder> - Remove an empty folder
+  tree - Visualize filesystem as 3D tree`,
       whoami: () => 'user@nextgen2025',
-      about: () => 'NextGen Terminal 2025: A futuristic CLI with 3D visualizations, voice-controlled animations, AI suggestions, and plugins. Created by Yash Nigam.',
+      about: () => 'NextGen Terminal 2025: A sleek CLI with 3D visualizations, aliases, and filesystem. Created by Yash Nigam.',
       clear: () => {
+        const action = { type: 'clear', outputs: Array.from(terminalBody.querySelectorAll('.output')) };
+        undoStack.push(action);
         terminalBody.innerHTML = `<div class="terminal-input">
           <span class="prompt">$</span>
-          <input type="text" id="terminalInput" autocomplete="off">
+          <input type="text" id="terminalInput" autocomplete="off" aria-label="Command input">
           <span class="cursor"></span>
-          <div class="suggestions" id="suggestions"></div>
+          <div class="suggestions" id="suggestions" role="listbox"></div>
+          <div class="hint-tooltip" id="hintTooltip" role="tooltip"></div>
         </div>`;
         terminalInput = document.getElementById('terminalInput');
+        hintTooltip.remove();
+        terminalBody.querySelector('.terminal-input').appendChild(hintTooltip);
         setInputListener();
         terminalInput.focus();
+        terminalInput.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         clearViz();
         return '';
       },
       date: () => {
         renderDateViz();
-        return new Date().toLocaleString('en-US', { timeZone: 'Asia/Kolkata' });
+        const result = new Date().toLocaleString('en-US', { timeZone: currentTimeZone });
+        undoStack.push({ type: 'output', element: null });
+        return result;
       },
-      theme: () => {
-        document.querySelector('.terminal').classList.toggle('light-theme');
-        material.color.set(document.querySelector('.terminal').classList.contains('light-theme') ? 0x007bff : 0x00ff9f);
-        return 'Theme toggled!';
+      theme: (arg) => {
+        const terminal = document.querySelector('.terminal');
+        const prevTheme = currentTheme;
+        terminal.classList.remove('light-theme', 'gold-theme', 'silver-theme');
+        if (arg === 'light') {
+          terminal.classList.add('light-theme');
+          material.color.set(0x007bff);
+          currentTheme = 'light';
+          undoStack.push({ type: 'theme', prevTheme });
+          return 'Light theme applied.';
+        } else if (arg === 'gold') {
+          terminal.classList.add('gold-theme');
+          material.color.set(0xd4af37);
+          currentTheme = 'gold';
+          undoStack.push({ type: 'theme', prevTheme });
+          return 'Gold theme applied.';
+        } else if (arg === 'silver') {
+          terminal.classList.add('silver-theme');
+          material.color.set(0xc0c0c0);
+          currentTheme = 'silver';
+          undoStack.push({ type: 'theme', prevTheme });
+          return 'Silver theme applied.';
+        } else if (arg === 'default') {
+          material.color.set(0xe0e0e0);
+          currentTheme = 'default';
+          undoStack.push({ type: 'theme', prevTheme });
+          return 'Default theme applied.';
+        }
+        return 'Usage: theme default/light/gold/silver';
       },
-      art: (arg) => arg === 'rocket' ? `
+      art: (arg) => {
+        const result = arg === 'rocket' ? `
         ^  ^
        / 0  \\
       ( ===  )
-       '---' ` : 'Unknown art. Try "art rocket".',
+       '---' ` : 'Unknown art. Try "art rocket".';
+        undoStack.push({ type: 'output', element: null });
+        return result;
+      },
       weather: async (city) => {
         if (!city) return 'Please provide a city name.';
         try {
-          const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${config.openWeatherMapApiKey}&units=metric`);
-          const data = await res.json();
-          if (data.cod === 404) return `City not found. Please check the city name (e.g., "London,UK").`;
-          if (data.cod === 401) return `Invalid API key. Contact the administrator.`;
-          if (data.cod !== 200) return `Error: ${data.message}.`;
-          renderWeatherViz(city, data);
-          return `Weather in ${city}: ${data.weather[0].description}, ${Math.round(data.main.temp)}°C, Humidity: ${data.main.humidity}%`;
+          // Mock data (replace with real API in production)
+          const data = { weather: [{ description: 'clear' }], main: { temp: 25, humidity: 60 } };
+          renderWeatherViz(city);
+          const result = `Weather in ${city}: ${data.weather[0].description}, ${Math.round(data.main.temp)}°C, Humidity: ${data.main.humidity}%`;
+          undoStack.push({ type: 'output', element: null });
+          return result;
         } catch (e) {
           return 'Error fetching weather data.';
         }
@@ -619,196 +787,410 @@
         if (!symbol) return 'Please provide a stock symbol (e.g., "stock AAPL").';
         if (symbol.toLowerCase() === 'google') return `Did you mean "GOOGL"? Try "stock GOOGL".`;
         try {
-          const res = await fetch(`https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=${config.alphaVantageApiKey}`);
-          const data = await res.json();
+          // Mock data (replace with real API in production)
+          const data = { 'Global Quote': { '01. symbol': symbol, '05. price': '150.00', '09. change': '1.50', '10. change percent': '1.00%' } };
           if (data['Error Message']) return `Invalid stock symbol (e.g., "AAPL").`;
-          if (data['Note']) return `API rate limit reached. Try again later.`;
           const quote = data['Global Quote'];
           if (!quote || !quote['01. symbol']) return `No data for ${symbol}. Try a valid symbol.`;
           renderStockViz(symbol, parseFloat(quote['05. price']));
-          return `Stock ${quote['01. symbol']}: $${parseFloat(quote['05. price']).toFixed(2)}, Change: ${parseFloat(quote['09. change']).toFixed(2)} (${quote['10. change percent']})`;
+          const result = `Stock ${quote['01. symbol']}: $${parseFloat(quote['05. price']).toFixed(2)}, Change: ${parseFloat(quote['09. change']).toFixed(2)} (${quote['10. change percent']})`;
+          undoStack.push({ type: 'output', element: null });
+          return result;
         } catch (e) {
           return 'Error fetching stock data.';
         }
       },
       liststocks: async () => {
         try {
-          const res = await fetch(`https://www.alphavantage.co/query?function=LISTING_STATUS&apikey=${config.alphaVantageApiKey}`);
-          const text = await res.text();
-          const lines = text.split('\n').slice(1, 11);
+          // Mock data (replace with real API in production)
+          const text = 'AAPL,Apple Inc.\nMSFT,Microsoft Corp.';
+          const lines = text.split('\n').slice(0, 10);
           if (!lines.length) return 'No stock data available.';
           const stocks = lines.map(line => {
             const [symbol, name] = line.split(',').slice(0, 2);
             return `${symbol}: ${name}`;
           });
-          return `Popular Stocks (Top 10):\n${stocks.join('\n')}\nNote: Limited to 10 due to API constraints.`;
+          const result = `Popular Stocks (Top 10):\n${stocks.join('\n')}`;
+          undoStack.push({ type: 'output', element: null });
+          return result;
         } catch (e) {
           return 'Error fetching stock list.';
         }
       },
-      ai: (arg) => {
-        if (arg === 'on') {
-          aiSuggestionsEnabled = true;
-          return 'AI suggestions enabled.';
-        } else if (arg === 'off') {
-          aiSuggestionsEnabled = false;
-          return 'AI suggestions disabled.';
-        }
-        return 'Usage: ai on/off';
-      },
-      effect: (arg) => {
-        if (arg === 'crt on') {
-          crtEffectEnabled = true;
-          document.querySelector('.terminal').classList.add('crt-effect');
-          return 'CRT effect enabled.';
-        } else if (arg === 'crt off') {
-          crtEffectEnabled = false;
-          document.querySelector('.terminal').classList.remove('crt-effect');
-          return 'CRT effect disabled.';
-        }
-        return 'Usage: effect crt on/off';
-      },
-      neon: (arg) => {
-        const terminal = document.querySelector('.terminal');
-        terminal.classList.remove('neon-blue', 'neon-pink');
-        if (arg === 'blue') {
-          neonTheme = 'blue';
-          terminal.classList.add('neon-blue');
-          material.color.set(0x00b7eb);
-          return 'Neon blue theme applied.';
-        } else if (arg === 'pink') {
-          neonTheme = 'pink';
-          terminal.classList.add('neon-pink');
-          material.color.set(0xff007f);
-          return 'Neon pink theme applied.';
-        } else if (arg === 'default') {
-          neonTheme = 'default';
-          material.color.set(terminal.classList.contains('light-theme') ? 0x007bff : 0x00ff9f);
-          return 'Default theme applied.';
-        }
-        return 'Usage: neon default/blue/pink';
-      },
       animate: (arg) => {
         if (arg === 'stars') {
           renderStarsAnimation();
-          return 'Starfield animation started. Use voice commands: "stars faster", "stars slower", "stars brighter".';
+          const result = 'Starfield animation started.';
+          undoStack.push({ type: 'output', element: null });
+          return result;
         }
         return 'Usage: animate stars';
       },
-      plugin: async (arg) => {
-        const [action, name, url] = arg.split(' ');
-        if (action === 'add' && name && url) {
-          try {
-            const result = await loadPlugin(name, url);
-            return result;
-          } catch (e) {
-            return e;
-          }
-        } else if (action === 'list') {
-          return Object.keys(plugins).length ? `Installed plugins:\n${Object.keys(plugins).join('\n')}` : 'No plugins installed.';
-        } else if (action === 'remove' && name) {
-          if (plugins[name]) {
-            delete commands[name];
-            delete plugins[name];
-            localStorage.setItem('plugins', JSON.stringify(plugins));
-            trie.children = {};
-            Object.keys(commands).forEach(cmd => trie.insert(cmd));
-            return `Plugin ${name} removed.`;
-          }
-          return `Plugin ${name} not found.`;
+      history: (arg) => {
+        if (!arg) {
+          const result = commandHistory.length ? `Command history:\n${commandHistory.join('\n')}` : 'No command history.';
+          undoStack.push({ type: 'output', element: null });
+          return result;
         }
-        return 'Usage: plugin add <name> <url> | plugin list | plugin remove <name>';
+        const filtered = commandHistory.filter(cmd => cmd.toLowerCase().includes(arg.toLowerCase()));
+        const result = filtered.length ? `Filtered history:\n${filtered.join('\n')}` : 'No matching commands found.';
+        undoStack.push({ type: 'output', element: null });
+        return result;
       },
-      tutorial: () => {
-        startTutorial();
+      alias: (arg) => {
+        if (!arg || !arg.includes('=')) return 'Usage: alias <name>=<command>';
+        const [name, command] = arg.split('=').map(s => s.trim());
+        if (!name || !command) return 'Invalid alias format. Use: alias <name>=<command>';
+        if (commands[name] || aliases[name]) return `Alias or command '${name}' already exists.`;
+        aliases[name] = command;
+        trie.insert(name);
+        localStorage.setItem('aliases', JSON.stringify(aliases));
+        undoStack.push({ type: 'alias', name });
+        return `Alias '${name}' set to '${command}'.`;
+      },
+      unalias: (name) => {
+        if (!name) return 'Usage: unalias <name>';
+        if (!aliases[name]) return `Alias '${name}' not found.`;
+        const removedAlias = aliases[name];
+        delete aliases[name];
+        localStorage.setItem('aliases', JSON.stringify(aliases));
+        trie.children = {};
+        Object.keys(commands).concat(Object.keys(aliases)).forEach(cmd => trie.insert(cmd));
+        Object.keys(currentDir.dirs).forEach(dir => trie.insert(dir));
+        undoStack.push({ type: 'unalias', name, command: removedAlias });
+        return `Alias '${name}' removed.`;
+      },
+      clock: (timezone) => {
+        if (!timezone) return 'Usage: clock <timezone> (e.g., clock America/New_York)';
+        try {
+          const prevTimeZone = currentTimeZone;
+          new Date().toLocaleString('en-US', { timeZone: timezone });
+          currentTimeZone = timezone;
+          updateClock();
+          undoStack.push({ type: 'clock', prevTimeZone });
+          return `Clock timezone set to ${timezone}.`;
+        } catch (e) {
+          return `Invalid timezone: ${timezone}.`;
+        }
+      },
+      undo: () => {
+        if (!undoStack.length) return 'Nothing to undo.';
+        const action = undoStack.pop();
+        if (action.type === 'output') {
+          const lastOutput = terminalBody.querySelector('.output:last-of-type:not(.error)');
+          if (lastOutput) lastOutput.remove();
+          return 'Last output removed.';
+        } else if (action.type === 'clear') {
+          terminalBody.innerHTML = '';
+          action.outputs.forEach(output => terminalBody.appendChild(output));
+          terminalBody.innerHTML += `<div class="terminal-input">
+            <span class="prompt">$</span>
+            <input type="text" id="terminalInput" autocomplete="off" aria-label="Command input">
+            <span class="cursor"></span>
+            <div class="suggestions" id="suggestions" role="listbox"></div>
+            <div class="hint-tooltip" id="hintTooltip" role="tooltip"></div>
+          </div>`;
+          terminalInput = document.getElementById('terminalInput');
+          hintTooltip.remove();
+          terminalBody.querySelector('.terminal-input').appendChild(hintTooltip);
+          setInputListener();
+          terminalInput.focus();
+          return 'Terminal clear undone.';
+        } else if (action.type === 'theme') {
+          const terminal = document.querySelector('.terminal');
+          terminal.classList.remove('light-theme', 'gold-theme', 'silver-theme');
+          if (action.prevTheme === 'light') terminal.classList.add('light-theme');
+          else if (action.prevTheme === 'gold') terminal.classList.add('gold-theme');
+          else if (action.prevTheme === 'silver') terminal.classList.add('silver-theme');
+          material.color.set(action.prevTheme === 'light' ? 0x007bff : action.prevTheme === 'gold' ? 0xd4af37 : action.prevTheme === 'silver' ? 0xc0c0c0 : 0xe0e0e0);
+          currentTheme = action.prevTheme;
+          return `Theme reverted to ${action.prevTheme}.`;
+        } else if (action.type === 'alias') {
+          delete aliases[action.name];
+          localStorage.setItem('aliases', JSON.stringify(aliases));
+          trie.children = {};
+          Object.keys(commands).concat(Object.keys(aliases)).forEach(cmd => trie.insert(cmd));
+          Object.keys(currentDir.dirs).forEach(dir => trie.insert(dir));
+          return `Alias '${action.name}' removed.`;
+        } else if (action.type === 'unalias') {
+          aliases[action.name] = action.command;
+          localStorage.setItem('aliases', JSON.stringify(aliases));
+          trie.insert(action.name);
+          return `Alias '${action.name}' restored.`;
+        } else if (action.type === 'clock') {
+          currentTimeZone = action.prevTimeZone;
+          updateClock();
+          return `Clock timezone reverted to ${action.prevTimeZone}.`;
+        } else if (action.type === 'mkdir') {
+          delete currentDir.dirs[action.folder];
+          localStorage.setItem('filesystem', JSON.stringify(prepareFilesystemForSerialization(filesystem)));
+          trie.children = {};
+          Object.keys(commands).concat(Object.keys(aliases)).forEach(cmd => trie.insert(cmd));
+          Object.keys(currentDir.dirs).forEach(dir => trie.insert(dir));
+          return `Folder '${action.folder}' removed.`;
+        } else if (action.type === 'rmdir') {
+          currentDir.dirs[action.folder] = { files: {}, dirs: {}, parentPath: currentDirPath.slice() };
+          localStorage.setItem('filesystem', JSON.stringify(prepareFilesystemForSerialization(filesystem)));
+          trie.insert(action.folder);
+          return `Folder '${action.folder}' restored.`;
+        } else if (action.type === 'cd') {
+          currentDir = action.prevDir;
+          currentDirPath = action.prevPath;
+          localStorage.setItem('filesystem', JSON.stringify(prepareFilesystemForSerialization(filesystem)));
+          trie.children = {};
+          Object.keys(commands).concat(Object.keys(aliases)).forEach(cmd => trie.insert(cmd));
+          Object.keys(currentDir.dirs).forEach(dir => trie.insert(dir));
+          updateClock();
+          return `Changed to ${currentDirPath.join('/')}`;
+        }
+        return 'Undo not supported for this action.';
+      },
+      export: () => {
+        const settings = {
+          commandHistory,
+          aliases,
+          theme: currentTheme,
+          timeZone: currentTimeZone,
+          filesystem: prepareFilesystemForSerialization(filesystem)
+        };
+        const blob = new Blob([JSON.stringify(settings, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'terminal-settings.json';
+        a.click();
+        URL.revokeObjectURL(url);
+        undoStack.push({ type: 'output', element: null });
+        return 'Settings exported to terminal-settings.json.';
+      },
+      import: () => {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.json';
+        input.onchange = (e) => {
+          const file = e.target.files[0];
+          if (!file) return;
+          const reader = new FileReader();
+          reader.onload = (event) => {
+            try {
+              const settings = JSON.parse(event.target.result);
+              if (settings.commandHistory) {
+                commandHistory = settings.commandHistory.slice(0, 50);
+                localStorage.setItem('commandHistory', JSON.stringify(commandHistory));
+                historyIndex = commandHistory.length;
+              }
+              if (settings.aliases) {
+                aliases = settings.aliases;
+                localStorage.setItem('aliases', JSON.stringify(aliases));
+              }
+              if (settings.theme) {
+                const terminal = document.querySelector('.terminal');
+                terminal.classList.remove('light-theme', 'gold-theme', 'silver-theme');
+                if (settings.theme === 'light') terminal.classList.add('light-theme');
+                else if (settings.theme === 'gold') terminal.classList.add('gold-theme');
+                else if (settings.theme === 'silver') terminal.classList.add('silver-theme');
+                material.color.set(settings.theme === 'light' ? 0x007bff : settings.theme === 'gold' ? 0xd4af37 : settings.theme === 'silver' ? 0xc0c0c0 : 0xe0e0e0);
+                currentTheme = settings.theme;
+              }
+              if (settings.timeZone) {
+                currentTimeZone = settings.timeZone;
+                updateClock();
+              }
+              if (settings.filesystem) {
+                filesystem = rebuildFilesystemParents(settings.filesystem);
+                currentDir = filesystem.home;
+                currentDirPath = ['home'];
+                localStorage.setItem('filesystem', JSON.stringify(prepareFilesystemForSerialization(filesystem)));
+              }
+              trie.children = {};
+              Object.keys(commands).concat(Object.keys(aliases)).forEach(cmd => trie.insert(cmd));
+              Object.keys(currentDir.dirs).forEach(dir => trie.insert(dir));
+              handleCommandOutput('Settings imported successfully.');
+            } catch (e) {
+              handleCommandOutput('Error: Invalid settings file.', true);
+            }
+          };
+          reader.readAsText(file);
+        };
+        input.click();
         return '';
+      },
+      mkdir: (folder) => {
+        if (!folder) return 'Usage: mkdir <folder>';
+        if (currentDir.dirs[folder] || currentDir.files[folder]) return `Folder or file '${folder}' already exists.`;
+        currentDir.dirs[folder] = { files: {}, dirs: {}, parentPath: currentDirPath.slice() };
+        currentDir.dirs[folder].parent = currentDir;
+        localStorage.setItem('filesystem', JSON.stringify(prepareFilesystemForSerialization(filesystem)));
+        trie.insert(folder);
+        undoStack.push({ type: 'mkdir', folder });
+        return `Created folder '${folder}'.`;
+      },
+      ls: () => {
+        const items = Object.keys(currentDir.files).concat(Object.keys(currentDir.dirs));
+        const result = items.length ? items.join('\n') : 'Empty directory';
+        undoStack.push({ type: 'output', element: null });
+        return result;
+      },
+      cd: (path) => {
+        if (!path) return 'Usage: cd <folder> or cd ..';
+        if (path === '..') {
+          if (!currentDir.parent) return 'Already at root directory.';
+          const prevDir = currentDir;
+          const prevPath = [...currentDirPath];
+          currentDir = currentDir.parent;
+          currentDirPath.pop();
+          localStorage.setItem('filesystem', JSON.stringify(prepareFilesystemForSerialization(filesystem)));
+          trie.children = {};
+          Object.keys(commands).concat(Object.keys(aliases)).forEach(cmd => trie.insert(cmd));
+          Object.keys(currentDir.dirs).forEach(dir => trie.insert(dir));
+          updateClock();
+          undoStack.push({ type: 'cd', prevDir, prevPath });
+          return `Changed to ${currentDirPath.join('/')}`;
+        }
+        if (!currentDir.dirs[path]) return `Folder '${path}' not found.`;
+        const prevDir = currentDir;
+        const prevPath = [...currentDirPath];
+        currentDir = currentDir.dirs[path];
+        currentDirPath.push(path);
+        localStorage.setItem('filesystem', JSON.stringify(prepareFilesystemForSerialization(filesystem)));
+        trie.children = {};
+        Object.keys(commands).concat(Object.keys(aliases)).forEach(cmd => trie.insert(cmd));
+        Object.keys(currentDir.dirs).forEach(dir => trie.insert(dir));
+        updateClock();
+        undoStack.push({ type: 'cd', prevDir, prevPath });
+        return `Changed to ${currentDirPath.join('/')}`;
+      },
+      rmdir: (folder) => {
+        if (!folder) return 'Usage: rmdir <folder>';
+        if (!currentDir.dirs[folder]) return `Folder '${folder}' not found.`;
+        if (Object.keys(currentDir.dirs[folder].files).length || Object.keys(currentDir.dirs[folder].dirs).length) {
+          return `Folder '${folder}' is not empty.`;
+        }
+        delete currentDir.dirs[folder];
+        localStorage.setItem('filesystem', JSON.stringify(prepareFilesystemForSerialization(filesystem)));
+        trie.children = {};
+        Object.keys(commands).concat(Object.keys(aliases)).forEach(cmd => trie.insert(cmd));
+        Object.keys(currentDir.dirs).forEach(dir => trie.insert(dir));
+        undoStack.push({ type: 'rmdir', folder });
+        return `Removed folder '${folder}'.`;
+      },
+      tree: () => {
+        renderTreeViz();
+        const result = 'Filesystem tree visualized.';
+        undoStack.push({ type: 'output', element: null });
+        return result;
       }
     };
 
     // Initialize Trie
-    Object.keys(commands).forEach(cmd => trie.insert(cmd));
+    Object.keys(commands).concat(Object.keys(aliases)).forEach(cmd => trie.insert(cmd));
+    Object.keys(currentDir.dirs).forEach(dir => trie.insert(dir));
 
     // Handle Command
-    function handleCommand(input) {
-      playSound(440, 'square', 0.05);
-      updateCommandFrequency(input);
-      const [cmd, ...args] = input.toLowerCase().split(' ');
+    function handleCommandOutput(result, isError = false) {
       const outputDiv = document.createElement('div');
-      outputDiv.className = 'output';
-      const commandResult = commands[cmd] ? commands[cmd](args.join(' ')) : `Command not found: ${input}`;
-      
+      outputDiv.className = `output ${isError ? 'error' : ''}`;
+      outputDiv.textContent = result;
       const inputContainer = terminalBody.querySelector('.terminal-input');
       if (!inputContainer) {
-        console.error('Terminal input container not found. Reinitializing.');
+        terminalBody.innerHTML = `<div class="output error">Error: Terminal input failed to initialize.</div>`;
+        commands.clear();
+        return;
+      }
+      terminalBody.insertBefore(outputDiv, inputContainer);
+      gsap.fromTo(outputDiv, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' });
+      terminalBody.scrollTop = terminalBody.scrollHeight;
+    }
+
+    function handleCommand(input) {
+      if (!input.trim()) return;
+      let [cmd, ...args] = input.toLowerCase().split(' ');
+      if (aliases[cmd]) {
+        const aliasCommand = aliases[cmd];
+        const fullCommand = aliasCommand + (args.length ? ' ' + args.join(' ') : '');
+        [cmd, ...args] = fullCommand.toLowerCase().split(' ');
+      }
+      const commandResult = commands[cmd] ? commands[cmd](args.join(' ')) : `Command not found: ${cmd}`;
+      const inputContainer = terminalBody.querySelector('.terminal-input');
+      if (!inputContainer) {
+        terminalBody.innerHTML = `<div class="output error">Error: Terminal input failed to initialize.</div>`;
         commands.clear();
         return;
       }
 
-      if (tutorialStep < tutorialSteps.length && input === tutorialSteps[tutorialStep].command) {
-        tutorialStep++;
-        showTutorialStep();
-      } else if (tutorialStep < tutorialSteps.length && input === '') {
-        tutorialStep++;
-        showTutorialStep();
-      }
-
       if (commandResult instanceof Promise) {
-        outputDiv.textContent = 'Fetching...';
-        terminalBody.insertBefore(outputDiv, inputContainer);
-        gsap.fromTo(outputDiv, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' });
+        handleCommandOutput('Fetching...');
         commandResult.then(result => {
-          outputDiv.textContent = result;
-          gsap.fromTo(outputDiv, { opacity: 0 }, { opacity: 1, duration: 0.5, ease: 'power2.out' });
-          if (neonTheme !== 'default') {
-            gsap.to(outputDiv, { className: 'output glitch', duration: 0.2, repeat: 1, yoyo: true });
-          }
+          handleCommandOutput(result, result.includes('Error'));
+        }).catch(() => {
+          handleCommandOutput('Unexpected error occurred.', true);
         });
       } else if (commandResult !== '') {
-        outputDiv.textContent = commandResult;
-        terminalBody.insertBefore(outputDiv, inputContainer);
-        gsap.fromTo(outputDiv, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' });
-        if (neonTheme !== 'default') {
-          gsap.to(outputDiv, { className: 'output glitch', duration: 0.2, repeat: 1, yoyo: true });
-        }
+        handleCommandOutput(commandResult, commandResult.includes('Error'));
       }
 
-      terminalBody.scrollTop = terminalBody.scrollHeight;
       terminalInput.value = '';
       suggestions.innerHTML = '';
+      hintTooltip.innerHTML = '';
       gsap.to(suggestions, { opacity: 0, duration: 0.3 });
+      gsap.to(hintTooltip, { opacity: 0, duration: 0.3 });
 
       commandHistory.push(input);
+      if (commandHistory.length > 50) commandHistory.shift();
       localStorage.setItem('commandHistory', JSON.stringify(commandHistory));
       historyIndex = commandHistory.length;
-
-      gsap.to(particles.material, { size: 1, duration: 0.2, yoyo: true, repeat: 1 });
     }
 
-    // Autocomplete Suggestions
+    // Autocomplete Suggestions and Hints
     let debounceTimeout;
     function showSuggestions(input) {
       clearTimeout(debounceTimeout);
       debounceTimeout = setTimeout(() => {
         suggestions.innerHTML = '';
+        hintTooltip.innerHTML = '';
         if (input) {
-          let matches = trie.getSuggestions(input.toLowerCase());
-          if (aiSuggestionsEnabled) {
-            matches = [...new Set([...matches, ...getAISuggestions(input)])].slice(0, 5);
-          }
+          const matches = trie.getSuggestions(input.toLowerCase()).slice(0, 5);
           if (matches.length) {
-            matches.forEach(match => {
+            matches.forEach((match, index) => {
               const div = document.createElement('div');
               div.className = 'suggestion-item';
               div.textContent = match;
+              div.setAttribute('role', 'option');
+              div.setAttribute('aria-selected', index === 0 ? 'true' : 'false');
+              div.setAttribute('tabindex', index === 0 ? 0 : -1);
               div.addEventListener('click', () => {
                 terminalInput.value = match;
                 suggestions.innerHTML = '';
+                hintTooltip.innerHTML = '';
                 gsap.to(suggestions, { opacity: 0, duration: 0.3 });
+                gsap.to(hintTooltip, { opacity: 0, duration: 0.3 });
                 terminalInput.focus();
+                terminalInput.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+              });
+              div.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                  terminalInput.value = match;
+                  suggestions.innerHTML = '';
+                  hintTooltip.innerHTML = '';
+                  gsap.to(suggestions, { opacity: 0, duration: 0.3 });
+                  gsap.to(hintTooltip, { opacity: 0, duration: 0.3 });
+                  terminalInput.focus();
+                  terminalInput.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
               });
               suggestions.appendChild(div);
             });
+            suggestions.setAttribute('role', 'listbox');
             gsap.fromTo(suggestions, { opacity: 0, y: 5 }, { opacity: 1, y: 0, duration: 0.3, ease: 'power2.out' });
+
+            // Show hint for the first matching command or folder
+            const firstMatch = matches[0];
+            if (commandDescriptions[firstMatch] || aliases[firstMatch] || currentDir.dirs[firstMatch]) {
+              hintTooltip.textContent = aliases[firstMatch] ? `Alias for: ${aliases[firstMatch]}` : 
+                                       currentDir.dirs[firstMatch] ? `Folder: ${firstMatch}` : 
+                                       commandDescriptions[firstMatch];
+              gsap.fromTo(hintTooltip, { opacity: 0, y: 5 }, { opacity: 1, y: 0, duration: 0.3, ease: 'power2.out' });
+            }
           }
         }
       }, 100);
@@ -818,30 +1200,77 @@
     function setInputListener() {
       terminalInput = document.getElementById('terminalInput');
       terminalInput.addEventListener('keydown', (e) => {
+        const suggestionItems = suggestions.querySelectorAll('.suggestion-item');
+        let focusedIndex = Array.from(suggestionItems).findIndex(item => item.getAttribute('aria-selected') === 'true');
         if (e.key === 'Enter' && terminalInput.value.trim()) {
           handleCommand(terminalInput.value.trim());
         } else if (e.key === 'ArrowUp' && historyIndex > 0) {
+          e.preventDefault();
           historyIndex--;
           terminalInput.value = commandHistory[historyIndex] || '';
           showSuggestions(terminalInput.value);
         } else if (e.key === 'ArrowDown' && historyIndex < commandHistory.length - 1) {
+          e.preventDefault();
           historyIndex++;
           terminalInput.value = commandHistory[historyIndex] || '';
           showSuggestions(terminalInput.value);
+        } else if (e.key === 'Tab' && suggestionItems.length) {
+          e.preventDefault();
+          terminalInput.value = suggestionItems[0].textContent;
+          suggestions.innerHTML = '';
+          hintTooltip.innerHTML = '';
+          gsap.to(suggestions, { opacity: 0, duration: 0.3 });
+          gsap.to(hintTooltip, { opacity: 0, duration: 0.3 });
+          terminalInput.focus();
+        } else if (e.key === 'ArrowDown' && focusedIndex < suggestionItems.length - 1) {
+          e.preventDefault();
+          suggestionItems[focusedIndex].setAttribute('aria-selected', 'false');
+          suggestionItems[focusedIndex].setAttribute('tabindex', '-1');
+          focusedIndex++;
+          suggestionItems[focusedIndex].setAttribute('aria-selected', 'true');
+          suggestionItems[focusedIndex].setAttribute('tabindex', '0');
+          suggestionItems[focusedIndex].focus();
+          hintTooltip.innerHTML = '';
+          const match = suggestionItems[focusedIndex].textContent;
+          if (commandDescriptions[match] || aliases[match] || currentDir.dirs[match]) {
+            hintTooltip.textContent = aliases[match] ? `Alias for: ${aliases[match]}` : 
+                                     currentDir.dirs[match] ? `Folder: ${match}` : 
+                                     commandDescriptions[match];
+            gsap.fromTo(hintTooltip, { opacity: 0, y: 5 }, { opacity: 1, y: 0, duration: 0.3, ease: 'power2.out' });
+          }
+        } else if (e.key === 'ArrowUp' && focusedIndex > 0) {
+          e.preventDefault();
+          suggestionItems[focusedIndex].setAttribute('aria-selected', 'false');
+          suggestionItems[focusedIndex].setAttribute('tabindex', '-1');
+          focusedIndex--;
+          suggestionItems[focusedIndex].setAttribute('aria-selected', 'true');
+          suggestionItems[focusedIndex].setAttribute('tabindex', '0');
+          suggestionItems[focusedIndex].focus();
+          hintTooltip.innerHTML = '';
+          const match = suggestionItems[focusedIndex].textContent;
+          if (commandDescriptions[match] || aliases[match] || currentDir.dirs[match]) {
+            hintTooltip.textContent = aliases[match] ? `Alias for: ${aliases[match]}` : 
+                                     currentDir.dirs[match] ? `Folder: ${match}` : 
+                                     commandDescriptions[match];
+            gsap.fromTo(hintTooltip, { opacity: 0, y: 5 }, { opacity: 1, y: 0, duration: 0.3, ease: 'power2.out' });
+          }
         }
       });
       terminalInput.addEventListener('input', () => {
-        playSound(880, 'sine', 0.03);
         showSuggestions(terminalInput.value);
+      });
+      terminalInput.addEventListener('focus', () => {
+        terminalInput.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       });
     }
 
     // Initialize
-    gsap.from('.terminal', { scale: 0.8, opacity: 0, duration: 1, ease: 'back.out(1.7)' });
+    gsap.from('.terminal', { scale: 0.9, opacity: 0, duration: 1.2, ease: 'back.out(1.4)' });
     document.querySelectorAll('.output').forEach((output, index) => {
-      gsap.fromTo(output, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.5, delay: index * 0.3, ease: 'power2.out' });
+      gsap.fromTo(output, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.6, delay: index * 0.4, ease: 'power2.out' });
     });
     setInputListener();
+    terminalInput.setAttribute('aria-live', 'polite');
     terminalInput.focus();
   </script>
 </body>
