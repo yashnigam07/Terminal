@@ -6,6 +6,18 @@
   <title>NextGen Terminal 2025</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&display=swap');
+    :root {
+      --primary-color: #2ecc71;
+      --background-color: rgba(30, 30, 30, 0.7);
+      --text-color: #e0e0e0;
+      --header-bg: linear-gradient(90deg, #2a2a2a, #3a3a3a);
+      --suggestion-bg: rgba(30, 30, 30, 0.8);
+      --tooltip-bg: rgba(30, 30, 30, 0.8);
+      --tooltip-color: #d4af37;
+      --border-color: rgba(255, 255, 255, 0.2);
+      --shadow-color: rgba(0, 0, 0, 0.3);
+    }
+
     * {
       margin: 0;
       padding: 0;
@@ -34,19 +46,14 @@
       width: 90%;
       max-width: 850px;
       height: 550px;
-      background: rgba(30, 30, 30, 0.7);
+      background: var(--background-color);
       backdrop-filter: blur(10px);
       border-radius: 16px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 8px 32px var(--shadow-color);
+      border: 1px solid var(--border-color);
       padding: 24px;
       position: relative;
       z-index: 1;
-      transition: transform 0.3s ease;
-    }
-
-    .terminal:hover {
-      transform: translateY(-5px);
     }
 
     .terminal-header {
@@ -54,9 +61,9 @@
       justify-content: space-between;
       align-items: center;
       padding: 12px 16px;
-      background: linear-gradient(90deg, #2a2a2a, #3a3a3a);
+      background: var(--header-bg);
       border-radius: 10px 10px 0 0;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      border-bottom: 1px solid var(--border-color);
     }
 
     .terminal-buttons {
@@ -81,7 +88,7 @@
     .terminal-button:nth-child(3) { background: #2ecc71; }
 
     .clock-display {
-      color: #e0e0e0;
+      color: var(--text-color);
       font-size: 13px;
       background: rgba(255, 255, 255, 0.1);
       padding: 4px 8px;
@@ -93,7 +100,7 @@
       height: calc(100% - 50px);
       overflow-y: auto;
       padding: 20px;
-      color: #e0e0e0;
+      color: var(--text-color);
       font-size: 15px;
       line-height: 1.6;
     }
@@ -108,7 +115,7 @@
     }
 
     .prompt {
-      color: #2ecc71;
+      color: var(--primary-color);
       margin-right: 8px;
       font-weight: 600;
     }
@@ -116,7 +123,7 @@
     #terminalInput {
       background: transparent;
       border: none;
-      color: #e0e0e0;
+      color: var(--text-color);
       font-family: 'IBM Plex Mono', monospace;
       font-size: 15px;
       width: 100%;
@@ -126,7 +133,7 @@
     .cursor {
       width: 10px;
       height: 18px;
-      background: #2ecc71;
+      background: var(--primary-color);
       display: inline-block;
       animation: blink 1.2s infinite;
     }
@@ -146,9 +153,9 @@
       position: absolute;
       top: 100%;
       left: 20px;
-      background: rgba(30, 30, 30, 0.8);
+      background: var(--suggestion-bg);
       backdrop-filter: blur(8px);
-      color: #e0e0e0;
+      color: var(--text-color);
       border-radius: 6px;
       padding: 8px;
       max-height: 120px;
@@ -156,7 +163,7 @@
       width: calc(100% - 40px);
       z-index: 2;
       opacity: 0;
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      border: 1px solid var(--border-color);
     }
 
     .suggestion-item {
@@ -174,8 +181,8 @@
       position: absolute;
       top: calc(100% + 140px);
       left: 20px;
-      background: rgba(30, 30, 30, 0.8);
-      color: #d4af37;
+      background: var(--tooltip-bg);
+      color: var(--tooltip-color);
       font-size: 13px;
       padding: 6px 10px;
       border-radius: 4px;
@@ -196,7 +203,7 @@
     }
 
     .terminal-body::-webkit-scrollbar-thumb {
-      background: #2ecc71;
+      background: var(--primary-color);
       border: none;
       border-radius: 4px;
     }
@@ -207,121 +214,45 @@
     }
 
     .suggestions::-webkit-scrollbar-thumb {
-      background: #2ecc71;
+      background: var(--primary-color);
       border: none;
       border-radius: 3px;
     }
 
     .light-theme {
-      background: rgba(240, 240, 240, 0.9);
-      color: #1a1a1a;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-    }
-
-    .light-theme .terminal-header {
-      background: linear-gradient(90deg, #e0e0e0, #f0f0f0);
-    }
-
-    .light-theme .prompt {
-      color: #007bff;
-    }
-
-    .light-theme #terminalInput {
-      color: #1a1a1a;
-    }
-
-    .light-theme .cursor {
-      background: #007bff;
-    }
-
-    .light-theme .suggestions {
-      background: rgba(240, 240, 240, 0.9);
-      color: #1a1a1a;
-      border: 1px solid rgba(0, 0, 0, 0.1);
-    }
-
-    .light-theme .suggestion-item:hover, .light-theme .suggestion-item:focus {
-      background: rgba(0, 123, 255, 0.1);
-    }
-
-    .light-theme .hint-tooltip {
-      background: rgba(240, 240, 240, 0.9);
-      color: #007bff;
-      border: 1px solid rgba(0, 0, 0, 0.1);
+      --primary-color: #007bff;
+      --background-color: rgba(240, 240, 240, 0.9);
+      --text-color: #1a1a1a;
+      --header-bg: linear-gradient(90deg, #e0e0e0, #f0f0f0);
+      --suggestion-bg: rgba(240, 240, 240, 0.9);
+      --tooltip-bg: rgba(240, 240, 240, 0.9);
+      --tooltip-color: #007bff;
+      --border-color: rgba(0, 0, 0, 0.1);
+      --shadow-color: rgba(0, 0, 0, 0.2);
     }
 
     .gold-theme {
-      color: #d4af37;
-      box-shadow: 0 8px 32px rgba(212, 175, 55, 0.3);
-      border: 1px solid rgba(212, 175, 55, 0.2);
-    }
-
-    .gold-theme .prompt {
-      color: #d4af37;
-    }
-
-    .gold-theme #terminalInput {
-      color: #d4af37;
-    }
-
-    .gold-theme .cursor {
-      background: #d4af37;
-    }
-
-    .gold-theme .terminal-header {
-      background: linear-gradient(90deg, #3a3a2a, #4a4a2a);
-    }
-
-    .gold-theme .suggestions {
-      background: rgba(30, 30, 30, 0.8);
-      border: 1px solid rgba(212, 175, 55, 0.2);
-    }
-
-    .gold-theme .suggestion-item:hover, .gold-theme .suggestion-item:focus {
-      background: rgba(212, 175, 55, 0.1);
-    }
-
-    .gold-theme .hint-tooltip {
-      background: rgba(30, 30, 30, 0.8);
-      color: #d4af37;
-      border: 1px solid rgba(212, 175, 55, 0.2);
+      --primary-color: #d4af37;
+      --background-color: rgba(30, 30, 30, 0.7);
+      --text-color: #d4af37;
+      --header-bg: linear-gradient(90deg, #3a3a2a, #4a4a2a);
+      --suggestion-bg: rgba(30, 30, 30, 0.8);
+      --tooltip-bg: rgba(30, 30, 30, 0.8);
+      --tooltip-color: #d4af37;
+      --border-color: rgba(212, 175, 55, 0.2);
+      --shadow-color: rgba(212, 175, 55, 0.3);
     }
 
     .silver-theme {
-      color: #c0c0c0;
-      box-shadow: 0 8px 32px rgba(192, 192, 192, 0.3);
-      border: 1px solid rgba(192, 192, 192, 0.2);
-    }
-
-    .silver-theme .prompt {
-      color: #c0c0c0;
-    }
-
-    .silver-theme #terminalInput {
-      color: #c0c0c0;
-    }
-
-    .silver-theme .cursor {
-      background: #c0c0c0;
-    }
-
-    .silver-theme .terminal-header {
-      background: linear-gradient(90deg, #2a2a3a, #3a3a4a);
-    }
-
-    .silver-theme .suggestions {
-      background: rgba(30, 30, 30, 0.8);
-      border: 1px solid rgba(192, 192, 192, 0.2);
-    }
-
-    .silver-theme .suggestion-item:hover, .silver-theme .suggestion-item:focus {
-      background: rgba(192, 192, 192, 0.1);
-    }
-
-    .silver-theme .hint-tooltip {
-      background: rgba(30, 30, 30, 0.8);
-      color: #c0c0c0;
-      border: 1px solid rgba(192, 192, 192, 0.2);
+      --primary-color: #c0c0c0;
+      --background-color: rgba(30, 30, 30, 0.7);
+      --text-color: #c0c0c0;
+      --header-bg: linear-gradient(90deg, #2a2a3a, #3a3a4a);
+      --suggestion-bg: rgba(30, 30, 30, 0.8);
+      --tooltip-bg: rgba(30, 30, 30, 0.8);
+      --tooltip-color: #c0c0c0;
+      --border-color: rgba(192, 192, 192, 0.2);
+      --shadow-color: rgba(192, 192, 192, 0.3);
     }
 
     @media (max-width: 600px) {
@@ -367,12 +298,13 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
   <script>
     // Three.js Background
+    const isMobile = /Mobi|Android/i.test(navigator.userAgent);
+    const particleCount = isMobile ? 100 : 400; // Dynamic particle count
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('bgCanvas'), alpha: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
 
-    const particleCount = 400;
     const geometry = new THREE.BufferGeometry();
     const vertices = [];
     for (let i = 0; i < particleCount; i++) {
@@ -389,11 +321,14 @@
     camera.position.z = 70;
 
     let vizObjects = [];
-    const animationSpeed = 0.0004;
+    let vizPersistent = false; // Flag for persistent visualizations
+    const animationSpeed = isMobile ? 0.0002 : 0.0004; // Slower animation on mobile
 
     function clearViz() {
-      vizObjects.forEach(obj => scene.remove(obj));
-      vizObjects = [];
+      if (!vizPersistent) {
+        vizObjects.forEach(obj => scene.remove(obj));
+        vizObjects = [];
+      }
     }
 
     function renderWeatherViz(city) {
@@ -419,7 +354,7 @@
       scene.add(clouds);
       vizObjects.push(clouds);
       gsap.to(globe.rotation, { y: Math.PI * 2, duration: 12, repeat: -1, ease: 'linear' });
-      setTimeout(clearViz, 6000);
+      // Removed setTimeout(clearViz, 6000)
     }
 
     function renderStockViz(symbol, price) {
@@ -451,7 +386,7 @@
       scene.add(plane);
       vizObjects.push(plane);
       gsap.to(plane.rotation, { y: Math.PI, duration: 10, repeat: -1, ease: 'power2.inOut' });
-      setTimeout(clearViz, 6000);
+      // Removed setTimeout(clearViz, 6000)
     }
 
     function renderDateViz() {
@@ -473,7 +408,7 @@
       const hours = now.getHours() % 12;
       const minutes = now.getMinutes();
       gsap.to(hourHand.rotation, { z: -(hours + minutes / 60) * Math.PI / 6, duration: 1.2, ease: 'power2.out' });
-      setTimeout(clearViz, 6000);
+      // Removed setTimeout(clearViz, 6000)
     }
 
     function renderStarsAnimation() {
@@ -492,7 +427,7 @@
       const stars = new THREE.Points(starGeometry, starMaterial);
       scene.add(stars);
       vizObjects.push(stars);
-      setTimeout(clearViz, 6000);
+      // Removed setTimeout(clearViz, 6000)
     }
 
     function renderTreeViz() {
@@ -528,7 +463,7 @@
       }
       addNode(filesystem, root, 0, 0, 1);
       gsap.to(root.rotation, { y: Math.PI * 2, duration: 12, repeat: -1, ease: 'linear' });
-      setTimeout(clearViz, 6000);
+      // Removed setTimeout(clearViz, 6000)
     }
 
     let animationFrameId;
@@ -617,11 +552,11 @@
     // Clock Widget
     const clockDisplay = document.getElementById('clockDisplay');
     function updateClock() {
-      const now = new Date().toLocaleString('en-US', { timeZone: currentTimeZone, hour: '2-digit', minute: '2-digit' });
+      const now = new Date().toLocaleString('en-US', { timeZone: currentTimeZone, hour: '2-digit', minute: '2-digit', second: '2-digit' });
       clockDisplay.textContent = `${currentDirPath.join('/')}> ${now} (${currentTimeZone})`;
     }
     updateClock();
-    setInterval(updateClock, 60000);
+    setInterval(updateClock, 1000); // Updated to 1-second interval
 
     // Trie for Autocomplete
     const trie = {
@@ -676,7 +611,10 @@
       ls: 'Lists files and folders in current directory',
       cd: 'Changes directory (e.g., cd docs, cd ..)',
       rmdir: 'Removes an empty folder (e.g., rmdir docs)',
-      tree: 'Visualizes filesystem as a 3D tree'
+      tree: 'Visualizes filesystem as a 3D tree',
+      touch: 'Creates a file (e.g., touch example.txt)', // Added
+      cat: 'Views file contents (e.g., cat example.txt)', // Added
+      viz: 'Controls visualizations (e.g., viz on/off/clear)' // Added
     };
 
     // Commands
@@ -703,7 +641,10 @@
   ls - List files and folders
   cd <folder> - Change directory
   rmdir <folder> - Remove an empty folder
-  tree - Visualize filesystem as 3D tree`,
+  tree - Visualize filesystem as 3D tree
+  touch <filename> - Create a file
+  cat <filename> - View file contents
+  viz on/off/clear - Control visualizations`,
       whoami: () => 'user@nextgen2025',
       about: () => 'NextGen Terminal 2025: A sleek CLI with 3D visualizations, aliases, and filesystem. Created by Yash Nigam.',
       clear: () => {
@@ -773,12 +714,16 @@
       weather: async (city) => {
         if (!city) return 'Please provide a city name.';
         try {
-          // Mock data (replace with real API in production)
-          const data = { weather: [{ description: 'clear' }], main: { temp: 25, humidity: 60 } };
+          // Updated mock data (placeholder for real API)
+          const data = { weather: [{ description: 'partly cloudy' }], main: { temp: 22.5, humidity: 65 } };
           renderWeatherViz(city);
           const result = `Weather in ${city}: ${data.weather[0].description}, ${Math.round(data.main.temp)}°C, Humidity: ${data.main.humidity}%`;
           undoStack.push({ type: 'output', element: null });
           return result;
+          // Placeholder for real API integration
+          // const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${localStorage.getItem('weatherApiKey')}&units=metric`);
+          // const data = await response.json();
+          // if (data.cod !== 200) return `Error: ${data.message}`;
         } catch (e) {
           return 'Error fetching weather data.';
         }
@@ -787,8 +732,8 @@
         if (!symbol) return 'Please provide a stock symbol (e.g., "stock AAPL").';
         if (symbol.toLowerCase() === 'google') return `Did you mean "GOOGL"? Try "stock GOOGL".`;
         try {
-          // Mock data (replace with real API in production)
-          const data = { 'Global Quote': { '01. symbol': symbol, '05. price': '150.00', '09. change': '1.50', '10. change percent': '1.00%' } };
+          // Updated mock data (placeholder for real API)
+          const data = { 'Global Quote': { '01. symbol': symbol, '05. price': '152.75', '09. change': '2.25', '10. change percent': '1.50%' } };
           if (data['Error Message']) return `Invalid stock symbol (e.g., "AAPL").`;
           const quote = data['Global Quote'];
           if (!quote || !quote['01. symbol']) return `No data for ${symbol}. Try a valid symbol.`;
@@ -796,14 +741,17 @@
           const result = `Stock ${quote['01. symbol']}: $${parseFloat(quote['05. price']).toFixed(2)}, Change: ${parseFloat(quote['09. change']).toFixed(2)} (${quote['10. change percent']})`;
           undoStack.push({ type: 'output', element: null });
           return result;
+          // Placeholder for real API integration
+          // const response = await fetch(`https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=${localStorage.getItem('stockApiKey')}`);
+          // const data = await response.json();
         } catch (e) {
           return 'Error fetching stock data.';
         }
       },
       liststocks: async () => {
         try {
-          // Mock data (replace with real API in production)
-          const text = 'AAPL,Apple Inc.\nMSFT,Microsoft Corp.';
+          // Updated mock data
+          const text = 'AAPL,Apple Inc.\nMSFT,Microsoft Corp.\nGOOGL,Alphabet Inc.\nAMZN,Amazon.com Inc.';
           const lines = text.split('\n').slice(0, 10);
           if (!lines.length) return 'No stock data available.';
           const stocks = lines.map(line => {
@@ -942,6 +890,13 @@
           Object.keys(currentDir.dirs).forEach(dir => trie.insert(dir));
           updateClock();
           return `Changed to ${currentDirPath.join('/')}`;
+        } else if (action.type === 'touch') {
+          delete currentDir.files[action.filename];
+          localStorage.setItem('filesystem', JSON.stringify(prepareFilesystemForSerialization(filesystem)));
+          trie.children = {};
+          Object.keys(commands).concat(Object.keys(aliases)).forEach(cmd => trie.insert(cmd));
+          Object.keys(currentDir.dirs).forEach(dir => trie.insert(dir));
+          return `File '${action.filename}' removed.`;
         }
         return 'Undo not supported for this action.';
       },
@@ -1079,6 +1034,34 @@
         const result = 'Filesystem tree visualized.';
         undoStack.push({ type: 'output', element: null });
         return result;
+      },
+      touch: (filename) => {
+        if (!filename) return 'Usage: touch <filename>';
+        if (currentDir.files[filename] || currentDir.dirs[filename]) return `File or folder '${filename}' already exists.`;
+        currentDir.files[filename] = { content: '', created: Date.now() };
+        localStorage.setItem('filesystem', JSON.stringify(prepareFilesystemForSerialization(filesystem)));
+        undoStack.push({ type: 'touch', filename });
+        return `Created file '${filename}'.`;
+      },
+      cat: (filename) => {
+        if (!filename) return 'Usage: cat <filename>';
+        if (!currentDir.files[filename]) return `File '${filename}' not found.`;
+        undoStack.push({ type: 'output', element: null });
+        return currentDir.files[filename].content || 'File is empty.';
+      },
+      viz: (arg) => {
+        if (arg === 'on') {
+          vizPersistent = true;
+          return 'Visualizations set to persistent.';
+        } else if (arg === 'off') {
+          vizPersistent = false;
+          clearViz();
+          return 'Visualizations set to temporary.';
+        } else if (arg === 'clear') {
+          clearViz();
+          return 'Visualizations cleared.';
+        }
+        return 'Usage: viz on/off/clear';
       }
     };
 
@@ -1197,6 +1180,7 @@
     }
 
     // Input Listener
+    let historyIndex = commandHistory.length;
     function setInputListener() {
       terminalInput = document.getElementById('terminalInput');
       terminalInput.addEventListener('keydown', (e) => {
